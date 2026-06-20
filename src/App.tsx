@@ -666,7 +666,7 @@ function App() {
               {/* Tab Contents */}
               <div className="workspace-tab-content">
                 {activeWorkspaceTab === 'viewer' ? (
-                  <>
+                  <div className="viewer-tab-layout">
                     {/* Canvas viewport */}
                     <DicomViewer
                       magnitudeFile={magnitudeFiles[currentFrameIndex]}
@@ -699,7 +699,7 @@ function App() {
                       setFps={setFps}
                       triggerTime={magnitudeFiles[currentFrameIndex]?.triggerTime || 0}
                     />
-                  </>
+                  </div>
                 ) : (
                   <div style={{ padding: '1.5rem', flex: 1 }}>
                     <VisualCharts

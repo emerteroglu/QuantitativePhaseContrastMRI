@@ -175,17 +175,27 @@ body {
 
 .workspace-tab-content {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.viewer-tab-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* Visual Canvas Layout */
 .viewer-workspace {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  gap: 1.5rem;
+  flex: 1;
+  padding: 1rem 1.5rem;
+  gap: 0.75rem;
+  min-height: 0;
 }
 
 .viewer-grid {
@@ -193,6 +203,8 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 @media (max-width: 1024px) {
@@ -210,6 +222,8 @@ body {
   flex-direction: column;
   position: relative;
   transition: border-color 0.2s ease;
+  flex: 1;
+  min-height: 0;
 }
 
 .viewer-card.active {
@@ -240,12 +254,13 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #020617;
-  aspect-ratio: 1;
+  flex: 1;
   position: relative;
   overflow: hidden;
   user-select: none;
   touch-action: none;
   width: 100%;
+  min-height: 0;
 }
 
 .canvas-container canvas {

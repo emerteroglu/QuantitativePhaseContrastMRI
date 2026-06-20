@@ -135,9 +135,9 @@ export const DicomViewer: React.FC<DicomViewerProps> = ({
     }
 
     // Auto-fit zoom once parent size is known (and keep it across all frames of the same series)
-    if (rect.width > 0 && lastSeriesRef.current !== lastSeriesKey) {
+    if (rect.width > 0 && rect.height > 0 && lastSeriesRef.current !== lastSeriesKey) {
       lastSeriesRef.current = lastSeriesKey;
-      const fitZoom = rect.width / Math.max(columns, rows);
+      const fitZoom = Math.min(rect.width, rect.height) / Math.max(columns, rows);
       setZoom(fitZoom);
       setPan({ x: 0, y: 0 });
       setWindowWidth(magnitudeFile.windowWidth || 500);

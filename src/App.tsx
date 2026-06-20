@@ -44,6 +44,7 @@ const defaultRoi = (width: number, height: number): FrameRoi => ({
 function App() {
   // DICOM frames
   const [magnitudeFiles, setMagnitudeFiles] = useState<ParsedDicomFile[]>([]);
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<'viewer' | 'charts'>('viewer');
   const [phaseFiles, setPhaseFiles] = useState<ParsedDicomFile[]>([]);
   
   // Player state
@@ -77,6 +78,7 @@ function App() {
     setPhaseFiles(ph);
     setCurrentFrameIndex(0);
     setIsPlaying(false);
+    setActiveWorkspaceTab('viewer');
 
     if (mag.length > 0) {
       const firstMag = mag[0];
@@ -196,6 +198,7 @@ function App() {
     setCycleSummary(null);
     setCurrentFrameIndex(0);
     setIsPlaying(false);
+    setActiveWorkspaceTab('viewer');
   };
 
   // Helper: check if a pixel is inside a polygon
@@ -644,45 +647,67 @@ function App() {
         <div className="main-content">
           {magnitudeFiles.length > 0 ? (
             <>
-              {/* Canvas viewport */}
-              <DicomViewer
-                magnitudeFile={magnitudeFiles[currentFrameIndex]}
-                phaseFile={phaseFiles[currentFrameIndex] || null}
-                venc={venc}
-                mappingFormat={mappingFormat}
-                roiType={roiType}
-                roiCircleCenter={rois[currentFrameIndex]?.circleCenter}
-                roiCircleRadius={rois[currentFrameIndex]?.circleRadius}
-                roiPolygonPoints={rois[currentFrameIndex]?.polygonPoints}
-                isRoiClosed={rois[currentFrameIndex]?.isClosed}
-                setRoiCircleCenter={(p) => updateActiveRoi(() => ({ circleCenter: p }))}
-                setRoiCircleRadius={(r) => updateActiveRoi(() => ({ circleRadius: r }))}
-                setRoiPolygonPoints={(pts) => updateActiveRoi(() => ({ polygonPoints: pts }))}
-                setIsRoiClosed={(c) => updateActiveRoi(() => ({ isClosed: c }))}
-                colormap={colormap}
-                currentFrameIndex={currentFrameIndex}
-                totalFrames={magnitudeFiles.length}
-                onFrameChange={setCurrentFrameIndex}
-              />
+              {/* Workspace Navigation Tabs */}
+              <div className="workspace-tabs">
+                <button
+                  className={`workspace-tab-btn ${activeWorkspaceTab === 'viewer' ? 'active' : ''}`}
+                  onClick={() => setActiveWorkspaceTab('viewer')}
+                >
+                  Cine Playback & ROI
+                </button>
+                <button
+                  className={`workspace-tab-btn ${activeWorkspaceTab === 'charts' ? 'active' : ''}`}
+                  onClick={() => setActiveWorkspaceTab('charts')}
+                >
+                  Flow Dynamics & Charts
+                </button>
+              </div>
 
-              {/* Scrubber playback controls */}
-              <ControlBar
-                currentFrameIndex={currentFrameIndex}
-                totalFrames={magnitudeFiles.length}
-                isPlaying={isPlaying}
-                onPlayPause={() => setIsPlaying(!isPlaying)}
-                onFrameChange={setCurrentFrameIndex}
-                fps={fps}
-                setFps={setFps}
-                triggerTime={magnitudeFiles[currentFrameIndex]?.triggerTime || 0}
-              />
+              {/* Tab Contents */}
+              <div className="workspace-tab-content">
+                {activeWorkspaceTab === 'viewer' ? (
+                  <>
+                    {/* Canvas viewport */}
+                    <DicomViewer
+                      magnitudeFile={magnitudeFiles[currentFrameIndex]}
+                      phaseFile={phaseFiles[currentFrameIndex] || null}
+                      venc={venc}
+                      mappingFormat={mappingFormat}
+                      roiType={roiType}
+                      roiCircleCenter={rois[currentFrameIndex]?.circleCenter}
+                      roiCircleRadius={rois[currentFrameIndex]?.circleRadius}
+                      roiPolygonPoints={rois[currentFrameIndex]?.polygonPoints}
+                      isRoiClosed={rois[currentFrameIndex]?.isClosed}
+                      setRoiCircleCenter={(p) => updateActiveRoi(() => ({ circleCenter: p }))}
+                      setRoiCircleRadius={(r) => updateActiveRoi(() => ({ circleRadius: r }))}
+                      setRoiPolygonPoints={(pts) => updateActiveRoi(() => ({ polygonPoints: pts }))}
+                      setIsRoiClosed={(c) => updateActiveRoi(() => ({ isClosed: c }))}
+                      colormap={colormap}
+                      currentFrameIndex={currentFrameIndex}
+                      totalFrames={magnitudeFiles.length}
+                      onFrameChange={setCurrentFrameIndex}
+                    />
 
-              {/* Graphs section */}
-              <div style={{ padding: '0 1.5rem 1.5rem 1.5rem' }}>
-                <VisualCharts
-                  framesData={frameMetricsList}
-                  cardiacCycleMs={cardiacCycleOverride}
-                />
+                    {/* Scrubber playback controls */}
+                    <ControlBar
+                      currentFrameIndex={currentFrameIndex}
+                      totalFrames={magnitudeFiles.length}
+                      isPlaying={isPlaying}
+                      onPlayPause={() => setIsPlaying(!isPlaying)}
+                      onFrameChange={setCurrentFrameIndex}
+                      fps={fps}
+                      setFps={setFps}
+                      triggerTime={magnitudeFiles[currentFrameIndex]?.triggerTime || 0}
+                    />
+                  </>
+                ) : (
+                  <div style={{ padding: '1.5rem', flex: 1 }}>
+                    <VisualCharts
+                      framesData={frameMetricsList}
+                      cardiacCycleMs={cardiacCycleOverride}
+                    />
+                  </div>
+                )}
               </div>
             </>
           ) : (

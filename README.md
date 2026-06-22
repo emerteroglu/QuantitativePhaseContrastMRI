@@ -1,5 +1,7 @@
 # FlowMRI - Quantitative Phase-Contrast MRI Analyzer
 
+🚀 **Live Demo**: [emerteroglu.github.io/QuantitativePhaseContrastMRI](https://emerteroglu.github.io/QuantitativePhaseContrastMRI/)
+
 **FlowMRI** is a high-performance, client-side web application designed for quantitative flow analysis of Phase-Contrast MRI (PC-MRI) data, particularly optimized for Cerebrospinal Fluid (CSF) dynamics in the Aqueduct of Sylvius. Built with React, TypeScript, and high-performance HTML5 canvases, it runs entirely in the browser—ensuring patient data never leaves your local environment.
 
 ---
